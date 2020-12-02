@@ -1,3 +1,5 @@
+<?php require "server-info.php" ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,6 +10,12 @@
 <body>
     <!-- Docs -->
     <!-- https://www.php.net/manual/en/ -->
+
+    <!-- Include/Requrie -->
+    <?php 
+        // include "layout/header.php"; // Forgiving if file does not exist
+        require "layout/header.php"; // Not forgiving if file does not exist     
+    ?>
 
 
     <!-- Variables -->
@@ -139,6 +147,10 @@
 
         echo "<br>";
 
+        echo $num3 > 8 ?  "$num3 is greater than 8": "$num3 is smaller than 8";
+
+        echo "<br>";
+
         $color = "red";
         switch ($color) {
             case 'red':
@@ -167,6 +179,51 @@
         echo date("d/m/Y h:i:sa");
     ?>
 
+
+    <!-- SuperGlobals -->
+    <?php if ($server): ?>
+        <ul>
+            <?php foreach ($server as $key => $value): ?>
+                <li><?php echo $key . ": " . $value ?></li>
+            <?php endforeach ?>
+        </ul>
+    <?php endif ?>
+
+    <?php if ($user): ?>
+        <ul>
+            <?php foreach ($user as $key => $value): ?>
+                <li><?php echo $key . ": " . $value ?></li>
+            <?php endforeach ?>
+        </ul>
+    <?php endif ?>
+
+    <br>
+    <br>
+
+    <!-- GET/POST -->
+    <form action="index.php" method="get">
+        <input type="text" placeholder="Name" name="name">
+        <input type="text" placeholder="Email" name="email">
+        <button type="submit">Go</button>
+    </form>
+    <?php 
+        if (isset($_GET["name"]) || isset($_GET["email"])) {
+            echo "User Name: ". $_GET["name"] . "<br> Email Address: ". $_GET["email"];
+        };
+    ?>
+
+    <br>
+
+    <form action="index.php" method="post">
+        <input type="text" placeholder="Name" name="name">
+        <input type="text" placeholder="Email" name="email">
+        <button type="submit">Go</button>
+    </form>
+    <?php 
+        if (isset($_POST["name"]) || isset($_POST["email"])) {
+            echo "User Name: ". $_POST["name"] . "<br> Email Address: ". $_POST["email"];
+        };
+    ?>
 
 </body>
 </html>
