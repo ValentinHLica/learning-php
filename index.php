@@ -221,9 +221,58 @@
     </form>
     <?php 
         if (isset($_POST["name"]) || isset($_POST["email"])) {
-            echo "User Name: ". $_POST["name"] . "<br> Email Address: ". $_POST["email"];
+            echo "User Name: ". $_POST["name"] . "<br> Email Address: ". $_POST["email"] . "<br>";
         };
     ?>
+
+    <!-- Filter/Validation -->
+    <?php 
+        if (filter_has_var(INPUT_POST,"name") && filter_has_var(INPUT_POST,"email")) {
+           echo "Your name is ".$_POST["name"]. "and your email is ". $_POST["email"];
+
+           echo "<br>";
+
+           // or filter_var($_POST["email"], FILTER_VALIDATE_EMAIL)    
+           if (filter_input(INPUT_POST,"email",FILTER_VALIDATE_EMAIL)) {
+               echo "Good Email <br>";
+           } else {
+               echo "Bad Email: ";
+               echo filter_var($_POST["email"],FILTER_SANITIZE_EMAIL);
+           }
+        }
+    ?>
+
+    <form action="<?php echo $_SERVER["PHP_SELF"]; ?>" method="post">
+        <input type="text" placeholder="Name" name="name">
+        <input type="text" placeholder="Email" name="email">
+        <input type="submit" value="Go">
+    </form>
+
+    <?php 
+        $inputs = array(
+            "name"=>"John Doe",
+            "email"=>"johndoe@example.com",
+            "age"=>65
+        );
+
+        $filters = array(
+            "name"=>array(
+                "filter"=>FILTER_CALLBACK,
+                "options"=>"ucwords"
+            ),
+            "email"=>FILTER_SANITIZE_EMAIL,
+            "age"=>array(
+                "filter"=>FILTER_VALIDATE_INT,
+                "options"=>array(
+                    "min_range"=>5,
+                    "max_range"=>100
+                )
+            )
+        );
+
+        print_r(filter_var_array($inputs,$filters));
+    ?>
+
 
 </body>
 </html>
