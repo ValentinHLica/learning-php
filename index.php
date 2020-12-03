@@ -273,6 +273,74 @@
         print_r(filter_var_array($inputs,$filters));
     ?>
 
+    <!-- Sessions -->
+    <?php 
+        if (filter_has_var(INPUT_POST,"submit")) {
+            
+            session_start();
+
+            $name = htmlentities($_POST["name"]);
+            $email = htmlentities($_POST["email"]);
+    
+            $_SESSION["name"] = isset($name) ? $name : "Guest";
+            $_SESSION["email"] = $name;
+            
+            // Close Session
+            session_destroy();
+        }
+    ?>
+
+    <form action="<?php echo $_SERVER["PHP_SELF"] ?>" method="post">
+        <input type="text" name="name" placeholder="Name"> 
+        <input type="text" name="email" placeholder="Email">
+        <input type="submit" name="submit">
+    </form>
+
+    <!-- Cookies -->
+    <?php 
+        // Create Cookie 
+        setcookie("token", "TOKEN STR", time() + 3600); // 1 hour
+
+        // Read Cookie 
+        echo isset($_COOKIE["token"]) ? $_COOKIE["token"]: "";
+
+        // Update Cookie
+        setcookie("token", "TOKEN STR 2", time() + 3600); // 1 hour
+
+        // Delete Cookie
+        setcookie("token", "TOKEN STR", time() - 3600); // -1 hour
+
+
+        // To Save Arryas in cookies
+        $cookieArray = array("name"=>"John");
+        setcookie("user", serialize($cookieArray), time() + 3600); // -1 hour
+
+        echo isset($_COOKIE["user"]) ? unserialize($_COOKIE["user"])["name"]: ""
+    ?>
+
+    <br><br>
+
+    <!-- Classes -->
+    <?php 
+        class Person {
+            public function __construct ($name,$age) {
+                $this->name = $name;
+                $this->age = $age;
+            }
+
+            public function greeting(){
+                return "My name is " . $this->name . " and im " . $this->age . " years old <br>";
+            }
+
+            public static function publicFunction(){
+                return "This is a static function <br>";
+            }
+        }
+
+        $user = new Person("John", 20);
+        $user->greeting();
+        echo Person::publicFunction()
+    ?>
 
 </body>
 </html>
